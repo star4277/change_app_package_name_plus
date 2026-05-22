@@ -21,7 +21,7 @@ Add this package to `dev_dependencies`:
 
 ```yaml
 dev_dependencies:
-  change_app_package_name_plus: ^1.5.0
+  change_app_package_name_plus: ^1.6.0
 ```
 
 Or:

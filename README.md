@@ -4,8 +4,8 @@ Change App Package Name with single command. It makes the process very easy and 
 ## What It does?
 - [x] Update AndroidManifest.xml files for release, debug & profile
 - [x] Update build.gradle file
-- [x] Update MainActivity file. Both java & kotlin supported.
-- [x] Move MainActivity file to new package directory structure
+- [x] Update Activity files. Both java & kotlin supported.
+- [x] Move Activity files to new package directory structure
 - [x] Delete old package name directory structure.
 - [x] Update Product Bundle Identifier in iOS.
   - if you have customized CFBundleIdentifier in Info.plist, it will not be updated. You have to update it manually.

@@ -60,33 +60,65 @@ class AndroidRenameSteps {
   }
 
   Future<void> updateMainActivity() async {
-    var path = await findMainActivity(type: 'java');
-    if (path != null) {
-      processMainActivity(path, 'java');
-    }
-
-    path = await findMainActivity(type: 'kotlin');
-    if (path != null) {
-      processMainActivity(path, 'kotlin');
-    }
+    await _migrateSourceFiles(type: 'java');
+    await _migrateSourceFiles(type: 'kotlin');
   }
 
-  Future<void> processMainActivity(File path, String type) async {
-    var extension = type == 'java' ? 'java' : 'kt';
+  Future<void> _migrateSourceFiles({required String type}) async {
+    final rootPath = '$PATH_ACTIVITY$type';
+    final rootDir = Directory(rootPath);
+    if (!await rootDir.exists()) {
+      print('No $type source directory found, skipping.');
+      return;
+    }
+
+    final files = await dirContents(rootDir);
+    final extension = type == 'java' ? '.java' : '.kt';
+    final oldPackagePath = oldPackageName!.replaceAll('.', '/');
+    final newPackagePath = newPackageName.replaceAll('.', '/');
+    final oldPackageMarker = '/$oldPackagePath/';
+
+    final sourceFiles = files
+        .whereType<File>()
+        .where((item) => _normalizePath(item.path).endsWith(extension))
+        .toList();
+
+    final filesToMove = sourceFiles
+        .where((item) => _normalizePath(item.path).contains(oldPackageMarker))
+        .toList();
+
+    if (filesToMove.isEmpty) {
+      print('No $type files found under old package path, skipping.');
+      return;
+    }
+
     print('Project is using $type');
-    print('Updating MainActivity.$extension');
-    await replaceInFileRegex(
-        path.path, r'^(package (?:\.|\w)+)', "package ${newPackageName}");
+    print('Migrating ${filesToMove.length} $extension files');
 
-    String newPackagePath = newPackageName.replaceAll('.', '/');
-    String newPath = '${PATH_ACTIVITY}${type}/$newPackagePath';
+    for (final file in filesToMove) {
+      await replaceInFile(file.path, oldPackageName, newPackageName);
 
-    print('Creating New Directory Structure');
-    await Directory(newPath).create(recursive: true);
-    await path.rename(newPath + '/MainActivity.$extension');
+      final sourcePath = _normalizePath(file.path);
+      final markerIndex = sourcePath.indexOf(oldPackageMarker);
+      if (markerIndex == -1) {
+        continue;
+      }
+
+      final relativePath = sourcePath.substring(markerIndex + oldPackageMarker.length);
+      final newFilePath = '${PATH_ACTIVITY}${type}/$newPackagePath/$relativePath';
+      final newParentPath = newFilePath.substring(0, newFilePath.lastIndexOf('/'));
+
+      await Directory(newParentPath).create(recursive: true);
+
+      final targetFile = File(newFilePath);
+      if (await targetFile.exists()) {
+        await targetFile.delete();
+      }
+
+      await file.rename(newFilePath);
+    }
 
     print('Deleting old directories');
-
     await deleteEmptyDirs(type);
   }
 
@@ -106,19 +138,6 @@ class AndroidRenameSteps {
     }
   }
 
-  Future<File?> findMainActivity({String type = 'java'}) async {
-    var files = await dirContents(Directory(PATH_ACTIVITY + type));
-    String extension = type == 'java' ? 'java' : 'kt';
-    for (var item in files) {
-      if (item is File) {
-        if (item.path.endsWith('MainActivity.' + extension)) {
-          return item;
-        }
-      }
-    }
-    return null;
-  }
-
   Future<List<FileSystemEntity>> dirContents(Directory dir) {
     if(!dir.existsSync()) return Future.value([]);
     var files = <FileSystemEntity>[];
@@ -128,5 +147,9 @@ class AndroidRenameSteps {
         // should also register onError
         onDone: () => completer.complete(files));
     return completer.future;
+  }
+
+  String _normalizePath(String path) {
+    return path.replaceAll('\\', '/');
   }
 }

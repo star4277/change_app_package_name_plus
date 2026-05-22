@@ -11,52 +11,50 @@ String ohosAppToJson(OhosApp data, {bool pretty = false}) {
 
 class OhosApp {
   App app;
+  Map<String, dynamic> extra;
 
   OhosApp({
     required this.app,
+    required this.extra,
   });
 
-  factory OhosApp.fromJson(Map<String, dynamic> json) => OhosApp(
-        app: App.fromJson(json["app"]),
-      );
+  factory OhosApp.fromJson(Map<String, dynamic> json) {
+    final extra = Map<String, dynamic>.from(json);
+    extra.remove("app");
+
+    return OhosApp(
+      app: App.fromJson(json["app"]),
+      extra: extra,
+    );
+  }
 
   Map<String, dynamic> toJson() => {
         "app": app.toJson(),
+        ...extra,
       };
 }
 
 class App {
   String bundleName;
-  String vendor;
-  int versionCode;
-  String versionName;
-  String icon;
-  String label;
+  Map<String, dynamic> extra;
 
   App({
     required this.bundleName,
-    required this.vendor,
-    required this.versionCode,
-    required this.versionName,
-    required this.icon,
-    required this.label,
+    required this.extra,
   });
 
-  factory App.fromJson(Map<String, dynamic> json) => App(
-        bundleName: json["bundleName"],
-        vendor: json["vendor"],
-        versionCode: json["versionCode"],
-        versionName: json["versionName"],
-        icon: json["icon"],
-        label: json["label"],
-      );
+  factory App.fromJson(Map<String, dynamic> json) {
+    final extra = Map<String, dynamic>.from(json);
+    extra.remove("bundleName");
+
+    return App(
+      bundleName: json['bundleName'] as String,
+      extra: extra,
+    );
+  }
 
   Map<String, dynamic> toJson() => {
         "bundleName": bundleName,
-        "vendor": vendor,
-        "versionCode": versionCode,
-        "versionName": versionName,
-        "icon": icon,
-        "label": label,
+        ...extra,
       };
 }

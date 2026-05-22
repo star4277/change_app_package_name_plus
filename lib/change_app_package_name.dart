@@ -1,9 +1,8 @@
 library change_app_package_name;
 
-import 'package:change_app_package_name/ohos/ohos_rename_steps.dart';
-
 import './android_rename_steps.dart';
 import './ios_rename_steps.dart';
+import 'ohos/ohos_rename_steps.dart';
 
 class ChangeAppPackageName {
   static Future<void> start(List<String> arguments) async {

@@ -1,8 +1,7 @@
-import 'dart:convert';
 import 'dart:io';
 
-import 'package:change_app_package_name/file_utils.dart';
-import 'package:change_app_package_name/ohos/ohos_app_config.dart';
+import '../file_utils.dart';
+import 'ohos_app_config.dart';
 
 class OhosRenameSteps {
   final String newPackageName;

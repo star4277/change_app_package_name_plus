@@ -1,6 +1,6 @@
 name: change_app_package_name_plus
-description: Change App Package Name with single command. Update AndroidManifest, build.gradle, MainActivity files & move MainActivity file to new directory structure automatically.
-version: 1.5.0
+description: Rename Flutter package/bundle identifiers for Android, iOS and OHOS with one command, including full Android Java/Kotlin source package migration.
+version: 1.6.0
 maintainer: Star4277
 homepage: https://github.com/star4277/change_app_package_name_plus
 

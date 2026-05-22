@@ -1,3 +1,9 @@
+## [1.6.0] - (May 22, 2026)
+
+* Fix Android package migration bug where only `MainActivity` was moved; now migrates all Java/Kotlin source files under the old package path.
+* Add OHOS package name replacement support.
+* Add and improve example fixtures to simplify migration testing and CI verification.
+
 ## [1.5.0] - (February 23, 2025)
 
 * Add support for Flutter 3.29.0 for Android build.gradle.kts file structure.

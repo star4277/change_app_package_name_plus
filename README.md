@@ -1,66 +1,81 @@
-# Change App Package Name for Flutter
-Change App Package Name with single command. It makes the process very easy and fast.
+﻿# change_app_package_name_plus
 
-## What It does?
-- [x] Update AndroidManifest.xml files for release, debug & profile
-- [x] Update build.gradle file
-- [x] Update MainActivity file. Both java & kotlin supported.
-- [x] Move MainActivity file to new package directory structure
-- [x] Delete old package name directory structure.
-- [x] Update Product Bundle Identifier in iOS.
-  - if you have customized CFBundleIdentifier in Info.plist, it will not be updated. You have to update it manually.
-- [x] Specify which platform they want to rename the package for.
+[中文文档](./README.zh.md)
 
-## How to Use?
+Change app package/bundle name for Flutter projects with one command.
 
-Add Change App Package Name to your `pubspec.yaml` in `dev_dependencies:` section. 
+## Features
+
+- Update Android `applicationId` (`build.gradle` / `build.gradle.kts`).
+- Update Android manifest package declarations (`main`, `debug`, `profile`).
+- Migrate Android source files under old package path to new package path.
+- Update Java/Kotlin package references during migration.
+- Remove empty old package directories after migration.
+- Update iOS bundle identifier in `project.pbxproj`.
+- Update OHOS bundle name in `ohos/AppScope/app.json5`.
+- Rename all platforms at once, or one platform at a time.
+
+## Install
+
+Add this package to `dev_dependencies`:
+
 ```yaml
-dev_dependencies: 
-  change_app_package_name: ^1.4.0
+dev_dependencies:
+  change_app_package_name_plus: ^1.5.0
 ```
-or run this command
+
+Or:
+
 ```bash
-flutter pub add -d change_app_package_name
-```
-Not migrated to null safety yet? use old version like this
-```yaml
-dev_dependencies: 
-  change_app_package_name: ^1.4.0
+flutter pub add -d change_app_package_name_plus
 ```
 
+Then:
 
-Update dependencies 
-```
+```bash
 flutter pub get
 ```
-Run this command to change the package name for both platforms.
 
-```
-dart run change_app_package_name:main com.new.package.name
-```
-To rename only Android:
-```
-dart run change_app_package_name:main com.new.package.name --android
-```
-To rename only IOS:
-```
-dart run change_app_package_name:main com.new.package.name --ios
+## Usage
+
+Rename Android + iOS + OHOS:
+
+```bash
+dart run change_app_package_name_plus:main com.new.package.name
 ```
 
-Where `com.new.package.name` is the new package name that you want for your app. replace it with any name you want.
+Rename Android only:
 
-## Meta
+```bash
+dart run change_app_package_name_plus:main com.new.package.name --android
+```
 
-Atiq Samtia– [@AtiqSamtia](https://twitter.com/atiqsamtia) – me@atiqsamtia.com
+Rename iOS only:
 
-Distributed under the MIT license.
+```bash
+dart run change_app_package_name_plus:main com.new.package.name --ios
+```
 
-[https://github.com/atiqsamtia/change_app_package_name](https://github.com/atiqsamtia/change_app_package_name)
+Rename OHOS only:
 
-## Contributing
+```bash
+dart run change_app_package_name_plus:main com.new.package.name --ohos
+```
 
-1. Fork it (<https://github.com/atiqsamtia/change_app_package_name/fork>)
-2. Create your feature branch (`git checkout -b feature/fooBar`)
-3. Commit your changes (`git commit -am 'Add some fooBar'`)
-4. Push to the branch (`git push origin feature/fooBar`)
-5. Create a new Pull Request
+## Notes
+
+- If you have customized `CFBundleIdentifier` in `Info.plist`, update it manually.
+- `com.new.package.name` is an example. Replace it with your own package name.
+
+## Thanks
+
+This project is based on and inspired by the original project:
+
+- Original project: <https://github.com/atiqsamtia/change_app_package_name>
+- Original author: Atiq Samtia (<https://twitter.com/atiqsamtia>)
+
+Thanks for the original implementation and open-source contribution.
+
+## License
+
+MIT
